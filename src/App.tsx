@@ -1,9 +1,10 @@
-function App() {
-  return (
-    <>
-      <div>어제 내 세상이 무너졌어...</div>
-    </>
-  );
-}
+import React from "react";
+import { RouterProvider } from "react-router-dom";
+
+import router from "./routes";
+
+const App = () => {
+  return <RouterProvider router={router} />;
+};
 
 export default App;
