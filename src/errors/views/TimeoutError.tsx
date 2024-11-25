@@ -1,6 +1,6 @@
 import { FallbackProps } from "react-error-boundary";
 
-export const TimeoutErrorFallback = ({
+export const TimeoutError = ({
   error,
   resetErrorBoundary,
 }: FallbackProps) => {
@@ -15,4 +15,4 @@ export const TimeoutErrorFallback = ({
   );
 };
 
-export default TimeoutErrorFallback;
+export default TimeoutError;

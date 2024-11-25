@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export const NotFoundErrorFallback = () => {
+export const NotFoundError = () => {
   const navigate = useNavigate();
 
   return (
@@ -13,4 +13,4 @@ export const NotFoundErrorFallback = () => {
   );
 };
 
-export default NotFoundErrorFallback;
+export default NotFoundError;

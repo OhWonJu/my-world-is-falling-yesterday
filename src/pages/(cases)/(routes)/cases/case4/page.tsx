@@ -1,6 +1,5 @@
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { useQueryErrorResetBoundary } from "@tanstack/react-query";
 
 import LocalErrorFallback from "@/errors/LocalErrorFallback";
 
@@ -13,8 +12,6 @@ const DESCRIPTION = `지금 까지는 서버에서 제공하는 API 에서 발�
 `;
 
 const Case4Page = () => {
-  const { reset } = useQueryErrorResetBoundary();
-
   return (
     <div className="relative flex flex-col flex-1 w-full">
       <h1 className="text-xl font-bold mb-8">
@@ -23,7 +20,6 @@ const Case4Page = () => {
       <Description description={DESCRIPTION} />
       <div className="flex flex-col w-full h-[150px]">
         <ErrorBoundary
-          onReset={reset}
           fallbackRender={({ error, resetErrorBoundary }) => (
             <LocalErrorFallback
               error={error}

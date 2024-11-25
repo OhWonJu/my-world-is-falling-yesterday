@@ -1,9 +1,10 @@
+import { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import * as Sentry from "@sentry/react";
 
-import { ApiError } from "./axios/axiosConfig";
-import { AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import { ApiError } from "@/types/apiError";
+import { ClientError } from "@/types/clientError";
 
-export default function errorLogger(
+export function apiErrorLogger(
   error: ApiError,
   originalRequest: InternalAxiosRequestConfig,
   response: AxiosResponse
@@ -15,8 +16,8 @@ export default function errorLogger(
   //   error.errorCode
   // );
 
-  console.log(originalRequest);
-  console.log(response);
+  // console.log(originalRequest);
+  // console.log(response);
 
   switch (error.errorCode) {
     case "Timeout": {
@@ -60,7 +61,7 @@ export default function errorLogger(
       });
       break;
     }
-    case "404201": {
+    case "404": {
       Sentry.withScope((scope: Sentry.Scope) => {
         scope.setTag("api", "notFound");
         scope.setLevel("warning");
@@ -113,4 +114,51 @@ export default function errorLogger(
       break;
     }
   }
+}
+
+export function clientErrorLogger(error: any) {
+  const clientError = new ClientError(error);
+  let tagValue: string = "";
+  let level: Sentry.SeverityLevel = "error";
+
+  // GlobalErrorBoundary 를 통해 전체 UI 를 대체 해야하는 경우 - throw
+  switch (clientError.name) {
+    case "Error":
+      tagValue = "Error";
+      break;
+    case "RangeError":
+      tagValue = "RangeError";
+      level = "fatal";
+      break;
+    case "ReferenceError":
+      tagValue = "ReferenceError";
+      level = "warning";
+      break;
+    case "SyntaxError":
+      tagValue = "SyntaxError";
+      level = "warning";
+      break;
+    case "TypeErrror":
+      level = "info";
+      tagValue = "TypeErrror";
+      break;
+    case "URIError":
+      tagValue = "URIError";
+      level = "info";
+      break;
+    case "AggregateError":
+      tagValue = "AggregateError";
+      level = "info";
+      break;
+    case "InternalError":
+      tagValue = "InternalError";
+      level = "info";
+      break;
+  }
+
+  Sentry.withScope((scope: Sentry.Scope) => {
+    scope.setTag("client", tagValue);
+    scope.setLevel(level);
+    Sentry.captureException(clientError);
+  });
 }

@@ -8,10 +8,11 @@ import "@/styles/tailwind.css";
 import AppContainer from "./AppContainer.tsx";
 
 const { VITE_SENTRY_DNS, MODE } = import.meta.env;
+import packageJson from "../package.json"
 
 Sentry.init({
   dsn: VITE_SENTRY_DNS,
-  release: "0.0.1",
+  release: packageJson.version,
   environment: "dev",
   maxBreadcrumbs: 10,
   integrations: [

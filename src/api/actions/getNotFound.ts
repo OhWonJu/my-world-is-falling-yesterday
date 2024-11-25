@@ -5,9 +5,13 @@ import { Response } from "../types";
 import { ERROR_CODE } from "../errorCode";
 
 export const getNotFound: HttpHandler = http.get(`${BASE_URL}/flag`, () => {
-  return HttpResponse.json<Response>({
-    ok: false,
-    errorCode: "404201",
-    error: ERROR_CODE["404201"],
+  return new HttpResponse(null, {
+    status: 404,
   });
+
+  // return HttpResponse.json<Response>({
+  //   ok: false,
+  //   errorCode: "404201",
+  //   error: ERROR_CODE["404201"],
+  // });
 });

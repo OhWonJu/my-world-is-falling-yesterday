@@ -11,6 +11,7 @@ import LocalErrorFallback from "@/errors/LocalErrorFallback";
 import Description from "@/pages/(cases)/_components/Description";
 import DetailItems from "@/pages/(cases)/_components/DetailItems";
 import Flag from "@/pages/(cases)/_components/Flag";
+import LocalErrorBoundary from "@/errors/LocalErrorBoundary";
 
 const Case1And2Page = () => {
   const [searchParams] = useSearchParams();
@@ -27,40 +28,24 @@ const Case1And2Page = () => {
   if (isLoading) return null;
   const detailData = data.data;
 
-  console.log(detailData.flag);
-
   return (
     <div className="relative flex flex-col flex-1 w-full">
       <h1 className="text-xl font-bold mb-8">{detailData.title}</h1>
       <Description description={detailData.description} />
-      <ErrorBoundary
-        fallbackRender={({ error, resetErrorBoundary }) => (
-          <LocalErrorFallback
-            error={error}
-            resetErrorBoundary={resetErrorBoundary}
-          />
-        )}
-      >
+
+      <LocalErrorBoundary>
         <Flag flag={detailData.flag} />
         {detailData.flag && (
           <div className="space-y-2 p-10">
             <strong>Item List</strong>
             <div className="border border-neutral-200 rounded-md w-full h-[140px] p-4">
-              <ErrorBoundary
-                onReset={reset}
-                fallbackRender={({ error, resetErrorBoundary }) => (
-                  <LocalErrorFallback
-                    error={error}
-                    resetErrorBoundary={resetErrorBoundary}
-                  />
-                )}
-              >
+              <LocalErrorBoundary onReset={reset}>
                 <DetailItems caseId={caseId} />
-              </ErrorBoundary>
+              </LocalErrorBoundary>
             </div>
           </div>
         )}
-      </ErrorBoundary>
+      </LocalErrorBoundary>
     </div>
   );
 };

@@ -1,12 +1,15 @@
 import { FallbackProps } from "react-error-boundary";
 
-import TimeoutErrorFallback from "./TimeoutErrorFallback";
-import NotFoundErrorFallback from "./NotFoundErrorFallback";
+import { clientErrorLogger } from "@/lib/errorLoggers";
+
+import NotFoundError from "./views/NotFoundError";
+import TimeoutError from "./views/TimeoutError";
 
 export const LocalErrorFallback = ({
   error,
   resetErrorBoundary,
 }: FallbackProps) => {
+  // API Error
   switch (error.errorCode) {
     case "Network Error":
     case "000":
@@ -19,17 +22,15 @@ export const LocalErrorFallback = ({
       throw error;
     }
     case "404": {
-      return <NotFoundErrorFallback />;
+      return <NotFoundError />;
     }
     case "Timeout": {
       return (
-        <TimeoutErrorFallback
-          error={error}
-          resetErrorBoundary={resetErrorBoundary}
-        />
+        <TimeoutError error={error} resetErrorBoundary={resetErrorBoundary} />
       );
     }
-    case "500": {
+    case "500":
+    case "undefined": {
       return (
         <section className="flex flex-col w-full h-full justify-center items-center">
           <p>예상하지 못한 문제가 발생했어요.</p>
@@ -39,18 +40,22 @@ export const LocalErrorFallback = ({
         </section>
       );
     }
-    case "undefined":
-    default: {
-      return (
-        <section className="flex flex-col w-full h-full justify-center items-center">
-          <p>예상하지 못한 문제가 발생했어요.</p>
-          <button onClick={() => resetErrorBoundary()}>
-            <span>다시 시도하기</span>
-          </button>
-        </section>
-      );
-    }
+    default:
+      // default 인 경우 api 에러가 아님
+      break;
   }
+
+  // client Error
+  clientErrorLogger(error);
+
+  return (
+    <section className="flex flex-col w-full h-full justify-center items-center">
+      <p>예상하지 못한 문제가 발생했어요.</p>
+      <button onClick={() => resetErrorBoundary()}>
+        <span>다시 시도하기</span>
+      </button>
+    </section>
+  );
 };
 
 export default LocalErrorFallback;
