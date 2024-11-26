@@ -1,12 +1,9 @@
-import Reactƒ from "react";
+import React from "react";
 import { useSearchParams } from "react-router-dom";
-import { ErrorBoundary } from "react-error-boundary";
 import { useQuery, useQueryErrorResetBoundary } from "@tanstack/react-query";
 
 import { _GET } from "@/api/rootAPI";
 import { DetailResponse } from "@/api/types";
-
-import LocalErrorFallback from "@/errors/LocalErrorFallback";
 
 import Description from "@/pages/(cases)/_components/Description";
 import DetailItems from "@/pages/(cases)/_components/DetailItems";
